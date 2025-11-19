@@ -10,7 +10,8 @@
 
 1.  **參數解析**：
     -   腳本啟動時，使用 `argparse` 解析命令列參數。
-    -   優先從環境變數 `SHIOAJI_API_KEY` 和 `SHIOAJI_SECRET_KEY` 讀取金鑰。若命令列參數有提供，則會覆蓋環境變數的值。
+    -   使用 `python-dotenv` 載入 `.env` 檔案中的變數。
+    -   腳本會優先從環境變數 `SHIOAJI_API_KEY` 和 `SHIOAJI_SECRET_KEY` 讀取金鑰。若命令列參數有提供，則會覆蓋環境變數的值。
     -   若未提供金鑰，腳本將提示錯誤並終止。
 
 2.  **模擬下單 (`run_simtest` 函式)**：

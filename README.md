@@ -1,6 +1,6 @@
 # Sinotrade API 模擬下單測試
 
-[![Python Script CI](https://github.com/<YOUR_GITHUB_USERNAME>/<YOUR_REPOSITORY_NAME>/actions/workflows/python-ci.yml/badge.svg)](https://github.com/<YOUR_GITHUB_USERNAME>/<YOUR_REPOSITORY_NAME>/actions/workflows/python-ci.yml)
+[![Python Script CI](https://github.com/weiyuanlo/sinotrade_simtest/actions/workflows/python-ci.yml/badge.svg)](https://github.com/weiyuanlo/sinotrade_simtest/actions/workflows/python-ci.yml)
 
 ---
 
@@ -11,13 +11,14 @@
 - `spec.md`: `simtest.py` 腳本的技術規格說明文件。
 - `simtest.py`: 執行模擬測試和狀態查詢的 Python 腳本。
 - `requirements.txt`: 專案所需的 Python 套件列表。
+- `.gitignore`: Git 忽略檔案列表，預設已包含 `.env`。
 - `README.md`: 本說明文件。
 
 ## 環境設定
 
 1.  **安裝 Python**：請確保您的電腦已安裝 Python 3.8 或以上版本。
 
-2.  **安裝依賴套件**：在執行腳本之前，您需要先安裝所有必要的套件。
+2.  **安裝依賴套件**：在專案根目錄下，執行以下指令安裝所有必要的套件。
 
 ```bash
 pip install -r requirements.txt

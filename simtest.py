@@ -4,8 +4,12 @@ import sys
 import argparse
 
 try:
+    from dotenv import load_dotenv
     import shioaji as sj
     from shioaji.constant import Status
+
+    # 在程式啟動時載入 .env 檔案中的環境變數
+    load_dotenv()
 except ImportError:
     print("錯誤: 找不到 'shioaji' 模組。")
     print("請先使用 'pip install -r requirements.txt' 指令安裝必要的套件。")
