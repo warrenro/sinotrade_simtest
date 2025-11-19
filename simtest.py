@@ -54,6 +54,10 @@ def run_simtest(api_key, secret_key, stock_code, stock_price, futures_price, qua
     except Exception as e:
         print(f"證券下單測試時發生錯誤: {e}")
 
+    # 根據官方要求，證券與期貨下單需間隔 1 秒以上
+    print("\n等待 1 秒後進行期貨下單...")
+    time.sleep(1)
+
     # 期貨下單測試
     try:
         print("\n--- 開始期貨下單模擬測試 ---")

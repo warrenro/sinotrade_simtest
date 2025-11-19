@@ -20,6 +20,7 @@
         -   根據 `--stock-code` 參數取得證券合約。
         -   使用 `--stock-price` 和 `--quantity` 參數建立一個限價單 (LMT)、ROD 的買單。
         -   執行 `api.place_order` 並印出委託結果。
+    -   **等待 1 秒**：為符合官方測試要求，在證券下單後，腳本會暫停 1 秒。
     -   **期貨下單**：
         -   自動查找近月的台指期貨合約 (TXF)。
         -   使用 `--futures-price` 和 `--quantity` 參數建立一個限價單 (LMT)、ROD 的買單。
