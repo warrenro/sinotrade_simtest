@@ -26,15 +26,16 @@
         -   執行 `api.place_order` 並印出委託結果。
     -   執行完畢後，登出模擬環境。
 
-3.  **等待**：
-    -   模擬下單完成後，腳本會進入等待階段。
-    -   等待時間由 `--wait-time` 參數決定（單位：分鐘），預設為 10 分鐘。
+3.  **輪詢等待 (`Polling`)**：
+    -   模擬下單完成後，腳本進入輪詢模式。
+    -   腳本會每隔 60 秒呼叫一次 `check_api_test_status` 函式。
+    -   輪詢會持續進行，直到 `check_api_test_status` 回傳 `True` (所有帳戶皆通過)，或達到 `--wait-time` 設定的最大分鐘數為止。
 
 4.  **狀態檢查 (`check_api_test_status` 函式)**：
     -   等待結束後，初始化 `shioaji` API，設定 `simulation=False`（正式環境）。
     -   使用相同的金鑰登入正式環境。
     -   遍歷返回的所有帳戶 (`StockAccount`, `FutureAccount`)。
-    -   檢查每個帳戶的 `signed` 屬性，並印出帳戶類型、帳號及是否通過測試 (`signed=True`) 的狀態。
+    -   檢查每個帳戶的 `signed` 屬性。如果所有帳戶的 `signed` 皆為 `True`，則函式回傳 `True`，否則回傳 `False`。
     -   執行完畢後，登出正式環境。
 
 ## 3. 錯誤處理

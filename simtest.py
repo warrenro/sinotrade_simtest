@@ -8,7 +8,7 @@ try:
     from shioaji.constant import Status
 except ImportError:
     print("錯誤: 找不到 'shioaji' 模組。")
-    print("請先使用 'pip install shioaji' 指令進行安裝後再執行本腳本。")
+    print("請先使用 'pip install -r requirements.txt' 指令安裝必要的套件。")
     exit(1)
 
 def run_simtest(api_key, secret_key, stock_code, stock_price, futures_price, quantity):
@@ -94,24 +94,39 @@ def run_simtest(api_key, secret_key, stock_code, stock_price, futures_price, qua
 def check_api_test_status(api_key, secret_key):
     """
     Checks if the API test has been passed by logging into production.
+    Returns True if all accounts have passed, False otherwise.
 
     Args:
         api_key (str): Your Shioaji API Key.
         secret_key (str): Your Shioaji Secret Key.
     """
-    print("\n--- 查詢API測試狀態 ---")
     api = sj.Shioaji(simulation=False) # Production Mode
+    all_passed = False
     try:
         accounts = api.login(api_key=api_key, secret_key=secret_key)
         print("正式環境登入成功，正在檢查帳戶狀態...")
+
+        if not accounts:
+            print("找不到任何帳戶可供檢查。")
+            return False
+
+        passed_accounts = 0
         for acc in accounts:
             signed_status = "已通過 (signed=True)" if acc.signed else "未通過或未簽署 (signed=False)"
             print(f"帳戶類型: {type(acc).__name__}, 帳號: {acc.account_id}, 狀態: {signed_status}")
+            if acc.signed:
+                passed_accounts += 1
+        
+        if passed_accounts > 0 and passed_accounts == len(accounts):
+            all_passed = True
+
     except Exception as e:
-        print(f"登入正式環境失敗: {e}")
+        print(f"登入正式環境或檢查狀態時發生錯誤: {e}")
+        return False
     finally:
         api.logout()
         print("已登出正式環境。")
+    return all_passed
 
 if __name__ == "__main__":
     # For better security, load credentials from environment variables if not provided via command line
@@ -125,7 +140,7 @@ if __name__ == "__main__":
     parser.add_argument("--stock-price", type=float, default=18.0, help="證券模擬下單的價格")
     parser.add_argument("--futures-price", type=float, default=15000.0, help="期貨模擬下單的價格")
     parser.add_argument("--quantity", type=int, default=1, help="模擬下單的數量")
-    parser.add_argument("--wait-time", type=int, default=10, help="模擬下單後等待查詢狀態的分鐘數")
+    parser.add_argument("--wait-time", type=int, default=10, help="輪詢狀態的最長等待分鐘數 (逾時時間)")
     args = parser.parse_args()
 
     if not args.api_key or not args.secret_key:
@@ -144,9 +159,20 @@ if __name__ == "__main__":
         print(f"執行模擬測試時發生未預期的錯誤: {e}")
         sys.exit(1)
 
-    wait_seconds = args.wait_time * 60
     print("\n模擬下單測試已完成。")
-    print(f"將在 {args.wait_time} 分鐘後自動查詢 API 測試狀態...")
-    time.sleep(wait_seconds)
+    print(f"開始輪詢 API 測試狀態，每分鐘檢查一次，最長等待 {args.wait_time} 分鐘...")
 
-    check_api_test_status(api_key=args.api_key, secret_key=args.secret_key)
+    all_passed = False
+    for i in range(args.wait_time):
+        print(f"\n--- 第 {i+1} 分鐘，開始檢查 ---")
+        if check_api_test_status(api_key=args.api_key, secret_key=args.secret_key):
+            all_passed = True
+            print("\n恭喜！所有帳戶均已通過 API 測試。")
+            break
+        if i < args.wait_time - 1:
+            print("尚未全部通過，將於 1 分鐘後再次檢查...")
+            time.sleep(60)
+
+    if not all_passed:
+        print(f"\n已達到最長等待時間 ({args.wait_time} 分鐘)，仍有帳戶未通過測試。")
+        print("請稍後手動登入永豐金證券官網確認，或聯繫您的營業員。")
