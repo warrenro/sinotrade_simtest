@@ -40,7 +40,11 @@
 1.  **安裝 Shioaji**：
 
     ```bash
-    pip install shioaji
+    # 建議使用 python3 -m pip 以確保使用正確的 Python 版本
+    python3 -m pip install shioaji
+    
+    # 如果您的系統中 pip 指令已正確對應到 Python 3，也可以使用：
+    # pip install shioaji
     ```
 
 2.  **下載腳本**：
@@ -54,7 +58,7 @@
 打開您的終端機 (Terminal) 或命令提示字元 (CMD)，進入 `simtest.py` 所在的目錄，然後執行以下指令：
 
 ```bash
-python simtest.py test
+python3 simtest.py test
 ```
 
 腳本會提示您輸入 API Key 與 Secret Key。成功執行後，您會看到證券與期貨下單成功的訊息。
